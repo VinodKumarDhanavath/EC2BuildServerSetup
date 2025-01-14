@@ -15,8 +15,8 @@
       - git
       - yum-utils
 
-  - name: install java 11
-    shell: "amazon-linux-extras install java-openjdk11"
+  - name: install java 17
+    shell: "yum install java-17-amazon-corretto-headless -y"
     become: yes
 
   - name: Download Jenkins Repo
