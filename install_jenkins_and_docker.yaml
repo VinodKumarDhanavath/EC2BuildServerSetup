@@ -1,23 +1,23 @@
 ---
+
 - name: Jenkins and Docker
   hosts: localhost
   remote_user: ec2-user
   become: true
   
   tasks:
-  - name: install dependencies
+  - name: Install dependencies
     yum:
-      name: "{{ package }} "
+      name:
+        - wget
+        - git
+        - yum-utils
       state: present
-    vars:
-      package:
-      - wget
-      - git
-      - yum-utils
 
-  - name: install java 17
-    shell: "yum install java-17-amazon-corretto-headless -y"
-    become: yes
+  - name: Install java 17
+    yum:
+      name: java-17-amazon-corretto-headless
+      state: present
 
   - name: Download Jenkins Repo
     get_url:
@@ -41,7 +41,8 @@
       enabled: true
 
   - name: Sleep for 30 seconds and continue with play
-    wait_for: timeout=30
+    wait_for:
+      timeout: 30
 
   - name: Get init password Jenkins
     shell: cat /var/lib/jenkins/secrets/initialAdminPassword
@@ -52,10 +53,8 @@
     debug:
       var: result.stdout
 
-  - name: Install Docker
-    package:
-      name: "docker-20.10.25-1.amzn2.0.3.x86_64"
-      state: present
+  - name: Install Docker from Amazon-linux-extras
+    shell: "amazon-linux-extras install docker -y"
 
   - name: Ensure group "docker" exists
     ansible.builtin.group:
@@ -65,7 +64,7 @@
   - name: Add jenkins user to docker group
     ansible.builtin.user:
       name: jenkins
-      group: docker
+      groups: docker
       append: yes
 
   - name: Start Docker service
@@ -78,18 +77,18 @@
     file:
       path: "/var/run/docker.sock"
       state: file
-      mode: "777"
+      mode: "0777"
 
   - block:
     - name: Download and Unarchive maven
       unarchive:
-        src:  https://downloads.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
+        src:  https://downloads.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz
         dest: /opt
-        copy: no
+        remote_src: true
 
     - name: Create maven symlink to /usr/bin
       file:
-        src: /opt/apache-maven-3.9.5/bin/mvn
+        src: /opt/apache-maven-3.9.10/bin/mvn
         dest: /usr/bin/mvn
         state: link
 
@@ -99,10 +98,9 @@
         line: "{{ item.line }}"
         create: yes
         state: present
-      with_items:
-        - { line: 'M2_HOME=/opt/apache-maven-3.9.5' }
+      loop:
+        - { line: 'M2_HOME=/opt/apache-maven-3.9.10' }
         - { line: 'PATH=$PATH:$M2_HOME/bin' }
 
-    - name: Exports/Run maven env file for make M2_HOME available globally
+    - name: Source maven environment
       shell: "source /etc/profile.d/maven.sh"
-
