@@ -60,8 +60,8 @@ This repository contains the configuration for an AWS EC2 build server running D
 - [Spring Boot App](https://github.com/VinodKumarDhanavath/SpringBootKubernetesApp): Application code and Kubernetes configuration.
 
 ## Learn More
-Check out my [project report]([https://drive.google.com/drive/folders/1x491xO3BcEop-Yp4IcHtM4xdf7mY9b22?usp=sharing]) for detailed documentation, screenshots (e.g., Snyk results, `kubectl` outputs), and visualizations.
+Check out my Project Report [https://drive.google.com/drive/folders/1x491xO3BcEop-Yp4IcHtM4xdf7mY9b22?usp=sharing]for detailed documentation, screenshots (e.g., Snyk results, `kubectl` outputs), and visualizations.
 
 **Author**: Vinod Kumar Dhanavath  
-**Portfolio**: [Insert portfolio link, if applicable]  
-**LinkedIn**: [Insert LinkedIn profile link, if desired]
+**Portfolio**:( [Insert portfolio link, if applicable])  
+**LinkedIn**: [www.linkedin.com/in/vinoddkumardh]
